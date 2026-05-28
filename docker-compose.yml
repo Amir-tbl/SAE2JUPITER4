@@ -1,0 +1,11 @@
+services:
+  suivi-colis-iutv:
+    build:
+      context: .
+      dockerfile: configDocker/docker/Dockerfile.ubuntu
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/suivi-colis-iutv
+      - /var/www/suivi-colis-iutv/vendor
+    container_name: suivi-colis-container

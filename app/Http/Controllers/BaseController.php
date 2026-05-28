@@ -1,0 +1,121 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Role;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\HttpFoundation\Response;
+
+abstract class BaseController extends Controller
+{
+    public static function getSuccessModal(string $message)
+    {
+        return view('components.successModal', [
+            'message' => $message,
+        ]);
+    }
+
+    public static function getErrorModal(string $message)
+    {
+        return view('components.errorModal', [
+            'message' => $message,
+        ]);
+    }
+
+    /**
+     * Procède à l'authentification de l'utilisateur.
+     * S'il est déjà connecté, rien ne se passe
+     * S'il n'est pas connecté, cela va définir l'utilisateur comme connecté avec `Auth::login($user)`.
+     * L'utilisateur est ensuite récupérable dans les autres controllers avec `Auth::user()`
+     * Dans la valeur retournée :
+     * - "success" signifie que l'authentification a réussie si sa valeur est en true (clé toujours présente)
+     * - "response" est la réponse à retourner en cas d'erreur (clé présente uniquement quand "success" est à false)
+     *
+     * @param  Request  $request  Requête
+     * @return array // dictionnaire au format ['success' => bool, 'response' => Response|ResponseFactory|null].
+     */
+    public function auth(Request $request): array
+    {
+        // Connexion de l'utilisateur
+        if (Auth::check()) {
+            if (Auth::user() !== null) {
+                // Si l'utilisateur est déjà connecté, rediriger l'utilisateur vers la page qu'il souhaitait accéder à l'origine
+                return ['success' => true];
+            } else {
+                dd("Erreur temporaire de test dans l'AuthController, c'est vraiment pas normal, l'authentification ne devrait pas être considérée comme valide alors que l'utilisateur n'existe pas !");
+            }
+        }
+
+        /* @var User $user */
+        $user = null;
+
+        if (! app()->isLocal()) {
+            // In production, try CAS authentication first
+            if (isset($_SERVER['REMOTE_USER'])) {
+                $login = $_SERVER['REMOTE_USER'];
+                $user = User::where('login', $login)->first();
+            } else {
+                // CAS not configured, redirect to login page
+                return ['success' => false, 'response' => redirect()->route('login')];
+            }
+        } else {
+            // En local, on choisit un utilisateur de test
+            $user =
+                User::all()->first(
+                    function (User $user) {
+                        $roles = $user->getRoles();
+
+                        // Rôle que l'utilisateur de test doit avoir (mettre null pour pas de rôle en particulier)
+                        // Choix du rôle de l'utilisateur : Service financier, Directeur IUT, Département Info, Département SD, Département RT, Administrateur BD
+                        $roleToHave = 'Département Info';
+
+                        // Nombre de rôles que l'utilisateur de test doit avoir
+                        $roleNumber = 1;
+
+                        return (is_null($roleToHave) || $roles->first((fn (Role $role) => $role->getName() == $roleToHave))) && $roles->count() == $roleNumber;
+
+                    }
+                );
+        }
+
+        if (is_null($user)) {
+            // Redirect to login page if user not found
+            return ['success' => false, 'response' => redirect()->route('login')];
+        }
+
+        // Charger les permissions de l'utilisateur
+        // TODO en changeant de page, les variables du modèle se déchargent.
+        //  Malgré le stockage de l'utilisateur avec l'authentification (et peut-être même malgré la session)
+        //  Pour optimiser plus de sorte à ce que le chargement de permissions ne se fait pas à chaque chargement de page
+        //  il faudrait faire un cache pour stocker les utilisateurs qui se sont connectés
+        $user->getPermissions(true);
+
+        Auth::login($user);
+
+        return ['success' => true];
+    }
+
+    /**
+     * Fonction de callback permettant d'exécuter des actions avant chaque fonction de chaque controllers.
+     *
+     * @param  mixed  $method  Fonction du controller à exécuter à la fin des actions
+     * @param  mixed  $parameters  liste des paramètres de la fonction du controller. Le premier paramètre sera la requête généralement
+     * @return Response // dictionnaire au format ['success' => bool, 'response' => Response|ResponseFactory]
+     */
+    public function callAction($method, $parameters)
+    {
+        // Charger l'utilisateur connecté pour être recupérable avec `Auth::user()`
+        // S'il y a une erreur dans le processus d'authentification, retourner pour afficher la vue d'erreur
+
+        $result = $this->auth(request());
+        if (! $result['success']) {
+            return $result['response'];
+        }
+
+        return parent::callAction($method, $parameters); // TODO: Change the autogenerated stub
+    }
+}

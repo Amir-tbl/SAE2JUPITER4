@@ -1,0 +1,59 @@
+# ───────────────────────────────────────────
+# Laravel .gitignore
+# ───────────────────────────────────────────
+
+# Environnement
+.env
+.env.backup
+.env.production
+
+# Dependencies
+/vendor
+/node_modules
+
+# Build
+/public/build
+/public/hot
+/public/storage
+/public/bootstrap
+
+# IDE / Editeurs
+/.fleet
+/.idea
+/.nova
+/.vscode
+/.zed
+/.phpactor.json
+/.claude
+ide.json
+
+# Logs
+*.log
+/storage/logs/*.log
+
+# Cache & sessions
+/.phpunit.cache
+.phpunit.result.cache
+/storage/*.key
+/storage/pail
+/bootstrap/cache/config.php
+/bootstrap/cache/packages.php
+/bootstrap/cache/services.php
+/bootstrap/cache/events.php
+/bootstrap/cache/routes-v7.php
+
+# Auth
+/auth.json
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Artéfacts Windows/WSL
+nul
+wsl.localhostUbuntu
+
+# Homestead
+Homestead.json
+Homestead.yaml
