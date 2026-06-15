@@ -8,17 +8,13 @@ use Illuminate\View\Component;
 
 class alert extends Component
 {
-    /**
-     * Create a new component instance.
-     */
+    // Cree une instance du composant
     public function __construct()
     {
         //
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
+    // Retourne la vue du composant
     public function render(): View|Closure|string
     {
         return view('components.alert');
