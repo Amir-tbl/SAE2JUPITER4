@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
+// Composant d'affichage des messages d'alerte (succès, erreur, info)
 class alert extends Component
 {
     // Cree une instance du composant
