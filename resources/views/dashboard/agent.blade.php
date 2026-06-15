@@ -1,3 +1,4 @@
+{{-- Tableau de bord de l'agent : indicateurs et commandes récentes du département --}}
 @extends('base')
 
 @section('page-title', 'Tableau de bord')
