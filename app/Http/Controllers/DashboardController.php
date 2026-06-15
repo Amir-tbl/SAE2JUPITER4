@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
+// Aiguille chaque utilisateur vers le tableau de bord correspondant à son rôle
 class DashboardController extends BaseController
 {
     public function index(): View
