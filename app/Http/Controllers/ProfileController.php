@@ -16,7 +16,7 @@ class ProfileController extends BaseController
 {
     public function show(Request $request): View
     {
-        /** @var User $user */
+        // @var User $user
         $user = Auth::user();
         $deptIds = $user->getDepartments()->pluck('id');
         $isDirecteur = $user->hasPermission(PermissionValue::SIGNER_BONS_DE_COMMANDES);
@@ -76,7 +76,7 @@ class ProfileController extends BaseController
 
     public function update(Request $request): RedirectResponse
     {
-        /** @var User $user */
+        // @var User $user
         $user = Auth::user();
         $mailSent = false;
         $validated = $request->validate([

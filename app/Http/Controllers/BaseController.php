@@ -26,18 +26,7 @@ abstract class BaseController extends Controller
         ]);
     }
 
-    /**
-     * Procède à l'authentification de l'utilisateur.
-     * S'il est déjà connecté, rien ne se passe
-     * S'il n'est pas connecté, cela va définir l'utilisateur comme connecté avec `Auth::login($user)`.
-     * L'utilisateur est ensuite récupérable dans les autres controllers avec `Auth::user()`
-     * Dans la valeur retournée :
-     * - "success" signifie que l'authentification a réussie si sa valeur est en true (clé toujours présente)
-     * - "response" est la réponse à retourner en cas d'erreur (clé présente uniquement quand "success" est à false)
-     *
-     * @param  Request  $request  Requête
-     * @return array // dictionnaire au format ['success' => bool, 'response' => Response|ResponseFactory|null].
-     */
+    // Authentifie l'utilisateur ou redirige si non connecte
     public function auth(Request $request): array
     {
         // Connexion de l'utilisateur
@@ -50,7 +39,7 @@ abstract class BaseController extends Controller
             }
         }
 
-        /* @var User $user */
+        // @var User $user
         $user = null;
 
         if (! app()->isLocal()) {
@@ -99,13 +88,7 @@ abstract class BaseController extends Controller
         return ['success' => true];
     }
 
-    /**
-     * Fonction de callback permettant d'exécuter des actions avant chaque fonction de chaque controllers.
-     *
-     * @param  mixed  $method  Fonction du controller à exécuter à la fin des actions
-     * @param  mixed  $parameters  liste des paramètres de la fonction du controller. Le premier paramètre sera la requête généralement
-     * @return Response // dictionnaire au format ['success' => bool, 'response' => Response|ResponseFactory]
-     */
+    // Intercepte chaque action pour forcer l'authentification
     public function callAction($method, $parameters)
     {
         // Charger l'utilisateur connecté pour être recupérable avec `Auth::user()`

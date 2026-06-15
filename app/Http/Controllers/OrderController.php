@@ -28,7 +28,7 @@ class OrderController extends BaseController
 
         // TODO réduire le nombre de requêtes et voir à propos du cache (je pense qu'on ne fera pas de cache mais on opti les requêtes)
         // TODO factoriser avec un déctorateur le code pour l'utilisateur et si possible factoriser l'envoi des variables courantes (ex: $suerPermissions)
-        /* @var User $user */
+        // @var User $user
         $user = Auth::user();
         $userRoles = $user->getRoles(); // Récupération des rôles en base de données
         $userPermissions = $user->getPermissions(); // Récupération d'un dictionnaire des permissions pour simplifier la vérification de permissions
@@ -490,7 +490,7 @@ class OrderController extends BaseController
     {
         $request = request();
         $id = $request['id'];
-        /* @var Order $order */
+        // @var Order $order
         $order = Order::findOrFail($id);
 
         // Vérification de permissions
@@ -532,7 +532,7 @@ class OrderController extends BaseController
     public function modalUploadPurchaseOrder($id)
     {
 
-        /* @var Order $order */
+        // @var Order $order
         $sign = request()['sign'];
         $order = Order::where('id', $id)->first();
 
@@ -625,7 +625,7 @@ class OrderController extends BaseController
         $user = Auth::user();
         $request = request();
 
-        /* @var Order $order */
+        // @var Order $order
         $order = Order::with(['logs.author', 'articles', 'comments.author'])->where('id', $id)->first();
         $orderId = $order->getId();
         $edit = $request['edit'];
@@ -1470,9 +1470,7 @@ class OrderController extends BaseController
         return redirect()->back();
     }
 
-    /**
-     * Enregistrer/modifier la signature manuscrite du directeur
-     */
+    // Enregistre la signature manuscrite du directeur
     public function saveUserSignature(Request $request)
     {
         $user = Auth::user();
@@ -1500,9 +1498,7 @@ class OrderController extends BaseController
         return response()->json(['status' => 'success', 'message' => 'Signature enregistrée.']);
     }
 
-    /**
-     * Générer le PDF du BC signé avec nom, signature et date du directeur
-     */
+    // Genere le PDF du BC signe
     private function generateSignedBcPdf(Order $order, $signer, $signedAt): void
     {
         $order->load(['author', 'department', 'supplier', 'articles']);
@@ -1858,7 +1854,7 @@ class OrderController extends BaseController
 
     public function downloadDocument(string $id, string $type)
     {
-        /* @var Order $order */
+        // @var Order $order
         $order = Order::findOrFail($id);
         $user = Auth::user();
 

@@ -21,7 +21,7 @@ class SupplierController extends BaseController
     {
         $request = request();
 
-        /* @var User $user */
+        // @var User $user
         $user = Auth::user();
         $userRoles = $user->getRoles();
         $userPermissions = Role::getPermissionsAsDict($userRoles);
@@ -150,7 +150,7 @@ class SupplierController extends BaseController
         $user = Auth::user();
         $request = request();
 
-        /* @var Supplier $supplier */
+        // @var Supplier $supplier
         $supplier = Supplier::where('id', $id)->first();
         $edit = $request['edit'];
 

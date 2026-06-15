@@ -10,9 +10,7 @@ use App\Models\User;
 
 class LoginController extends Controller
 {
-    /**
-     * Show the login form
-     */
+    // Affiche le formulaire de connexion
     public function showLoginForm()
     {
         if (Auth::check()) {
@@ -22,9 +20,7 @@ class LoginController extends Controller
         return view('login');
     }
 
-    /**
-     * Handle login attempt
-     */
+    // Traite la tentative de connexion
     public function login(Request $request)
     {
         $request->validate([
@@ -48,9 +44,7 @@ class LoginController extends Controller
         return redirect()->intended('/dashboard');
     }
 
-    /**
-     * Handle logout
-     */
+    // Deconnecte l'utilisateur
     public function logout(Request $request)
     {
         Auth::logout();

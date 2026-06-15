@@ -11,9 +11,7 @@ use Illuminate\View\View;
 
 class AboutController extends BaseController
 {
-    /**
-     * Affiche la page À Propos.
-     */
+    // Affiche la page A Propos
     public function about(): View|RedirectResponse|Redirector
     {
 

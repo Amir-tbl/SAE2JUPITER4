@@ -9,9 +9,7 @@ use Illuminate\Routing\Controller;
 
 class DevLoginController extends Controller
 {
-    /**
-     * Show all users for dev login selection
-     */
+    // Affiche la liste des utilisateurs pour connexion dev
     public function index()
     {
         if (!app()->isLocal()) {
@@ -23,9 +21,7 @@ class DevLoginController extends Controller
         return view('dev-login', ['users' => $users]);
     }
 
-    /**
-     * Log in as the specified user
-     */
+    // Connecte en tant que l'utilisateur choisi
     public function login(Request $request, string $id)
     {
         if (!app()->isLocal()) {
