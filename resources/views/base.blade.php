@@ -1,3 +1,4 @@
+{{-- Layout principal de l'application : structure HTML, en-tête et chargement des assets --}}
 @use(Database\Seeders\Status)
 @use(Database\Seeders\PermissionValue)
 
