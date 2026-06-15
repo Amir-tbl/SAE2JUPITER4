@@ -14,14 +14,9 @@ use Illuminate\Support\Collection;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
+    // Champs remplissables en masse
     protected $fillable = [
         'login',
         'last_name',
@@ -33,56 +28,32 @@ class User extends Authenticatable
         'signature_path',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
+    // Champs masques lors de la serialisation
     protected $hidden = [
         'password',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
+    // Casts des attributs
     protected $casts = [
         'password' => 'hashed',
     ];
  
-    /**
-     * Permissions de l'utilisateur à l'issu de ses rôles.
-     *
-     * @var array
-     */
+    // Permissions de l'utilisateur via ses roles
     private $permissions = null;
 
-    /**
-     * Retourne l'identifiant de l'utilisateur
-     *
-     * @return string // identifiant de l'utilisateur
-     */
+    // Retourne l'identifiant de l'utilisateur
     public function getId(): string
     {
         return $this->attributes['id'];
     }
 
-    /**
-     * Retourne le prénom de l'utilisateur
-     *
-     * @return string prénom de l'utilisateur
-     */
+    // Retourne le prenom de l'utilisateur
     public function getFirstName(): string
     {
         return $this->attributes['first_name'];
     }
 
-    /**
-     * Retourne le nom de famille de l'utilisateur
-     *
-     * @return string nom de famille de l'utilisateur
-     */
+    // Retourne le nom de famille de l'utilisateur
     public function getLastName(): string
     {
         return $this->attributes['last_name'];
@@ -99,74 +70,43 @@ class User extends Authenticatable
         return !empty($this->attributes['signature_path']);
     }
 
-    /**
-     * Retourne le nom complet de l'utilisateur
-     * en concaténant le prénom et le nom séparés par un espace.
-     *
-     * @return ?string le nom complet de l'utilisateur
-     */
+    // Retourne le nom complet de l'utilisateur
     public function getFullName(): ?string
     {
         return $this->getFirstName().' '.$this->getLastName();
     }
 
-    /**
-     * Retourne l'adresse email de l'utilisateur
-     *
-     * @return ?string l'adresse email de l'utilisateur
-     */
+    // Retourne l'email de l'utilisateur
     public function getEmail(): ?string
     {
         return $this->attributes['email'];
     }
 
-    /**
-     * Retourne le numéro de téléphone de l'utilisateur
-     *
-     * @return ?string numéro de téléphone de l'utilisateur
-     */
+    // Retourne le telephone de l'utilisateur
     public function getPhoneNumber(): ?string
     {
         return $this->attributes['phone_number'];
     }
 
-    /**
-     * Retourne la liste des rôles de l'utilisateur
-     *
-     * @return Collection // Collection (liste) des rôles de l'utilisateur
-     */
+    // Retourne les roles de l'utilisateur
     public function getRoles(): Collection
     {
         return $this->getAttribute('roles');
     }
 
-    /**
-     * Retourne true si l'utilisateur a un rôle en particulier, false sinon.
-     *
-     * @param  Role  $role  le rôle à vérifier
-     * @return bool // Si l'utilisateur a le rôle $role
-     */
+    // Verifie si l'utilisateur a un role donne
     public function hasRole(Role $role): bool
     {
         return $this->getRoles()->contains($role);
     }
 
-    /**
-     * Retourne la liste des départements auxquels appartient l'utilisateur
-     *
-     * @return Collection // Collection (liste) des départements de l'utilisateur
-     */
+    // Retourne les departements de l'utilisateur
     public function getDepartments(): Collection
     {
         return $this->getRoles()->filter(fn (Role $role) => $role->isDepartment());
     }
 
-    /**
-     * Retourne true si l'utilisateur a un rôle en particulier, false sinon.
-     *
-     * @param  bool  $forceLoad  Si la fonction force la récupération des informations depuis la base de données plutôt que du cache du modèle
-     * @return array // Si l'utilisateur a le rôle $role
-     */
+    // Retourne les permissions de l'utilisateur
     public function getPermissions(bool $forceLoad = false): array
     {
         if ($forceLoad || ! $this->permissions) {
@@ -176,14 +116,7 @@ class User extends Authenticatable
         return $this->permissions;
     }
 
-    /**
-     * Vérifie si un utilisateur a la permission "$permission"
-     *
-     * @param  PermissionValue|string  $permission  Permission à vérifier
-     * @param  bool  $strict  Si ne retourne pas true avec la permission administrateur (à false par défaut)
-     * @param  bool  $forceLoad  Si la fonction force la récupération des informations depuis la base de données plutôt que du cache du modèle
-     * @return bool // true si l'utilisateur a un rôle avec la permission "$permission", false sinon
-     */
+    // Verifie si l'utilisateur a une permission donnee
     public function hasPermission(PermissionValue|string $permission, bool $strict = false, bool $forceLoad = false): bool
     {
         $permissions = $this->getPermissions($forceLoad);
@@ -191,64 +124,37 @@ class User extends Authenticatable
         return (! $strict && $permissions[PermissionValue::ADMIN->value]) || $permissions[is_string($permission) ? $permission : $permission->value];
     }
 
-    /**
-     * Retourne la liste actions de l'utilisateur
-     *
-     * @return Collection // Liste des actions de l'utilisateur
-     */
+    // Retourne les logs de l'utilisateur
     public function getLogs(): Collection
     {
         return $this->getAttribute('logs');
     }
 
-    /**
-     * Retourne la liste des commentaires écrits par l'utilisateur
-     *
-     * @return Collection // commentaires écrits par l'utilisateur
-     */
+    // Retourne les commentaires de l'utilisateur
     public function getComments(): Collection
     {
         return $this->getAttribute('comments');
     }
 
-    /**
-     * Retourne un dictionnaire des permissions de l'utilisateur
-     *
-     * @return array // Dictionnaire des permissions de l'utilisateur
-     */
+    // Retourne les permissions sous forme de dictionnaire
     public function getPermissionsAsDict(): array
     {
         return Role::getPermissionsAsDict($this->getRoles());
     }
 
-    /**
-     * Retourne la date de la dernière modification de l'utilisateur
-     *
-     * @return ?string // date
-     */
+    // Retourne la date de derniere modification
     public function getLastUpdateDate(): ?string
     {
         return $this->attributes[$this->getUpdatedAtColumn()];
     }
 
-    /**
-     * Retourne la date de création de l'utilisateur
-     *
-     * @return string // date
-     */
+    // Retourne la date de creation de l'utilisateur
     public function getCreationDate(): string
     {
         return $this->attributes[$this->getCreatedAtColumn()];
     }
 
-    /**
-     * Définit le prénom de l'utilisateur
-     * Le prénom est d'abord mis en minuscule
-     * puis la première lettre est mise en majuscule.
-     *
-     * @param  string  $firstName  prénom de l'utilisateur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit le prenom de l'utilisateur
     public function setFirstName(string $firstName, bool $save = true): void
     {
         $firstName = ucfirst(strtolower($firstName, 'UTF-8'));
@@ -259,13 +165,7 @@ class User extends Authenticatable
         }
     }
 
-    /**
-     * Définit le nom de l'utilisateur
-     * Le nom est d'abord mis en majuscule
-     *
-     * @param  string  $lastName  nom de l'utilisateur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit le nom de famille de l'utilisateur
     public function setLastName(string $lastName, bool $save = true): void
     {
         $lastName = strtoupper($lastName, 'UTF-8');
@@ -276,12 +176,7 @@ class User extends Authenticatable
         }
     }
 
-    /**
-     * Définit le numéro de téléphone de l'utilisateur
-     *
-     * @param  string  $phoneNumber  numéro de téléphone de l'utilisateur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit le telephone de l'utilisateur
     public function setPhoneNumber(string $phoneNumber, bool $save = true): void
     {
         if ($save) {
@@ -291,12 +186,7 @@ class User extends Authenticatable
         }
     }
 
-    /**
-     * Définit l'adresse email de l'utilisateur
-     *
-     * @param  string  $emailAdress  adresse email de l'utilisateur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit l'email de l'utilisateur
     public function setEmail(string $emailAdress, bool $save = true): void
     {
         if ($save) {
@@ -306,31 +196,19 @@ class User extends Authenticatable
         }
     }
 
-    /**
-     * Retourne la liste des rôles de l'utilisateur (table association)
-     *
-     * @return BelongsToMany // Liste des rôles de l'utilisateur
-     */
+    // Relation vers les roles de l'utilisateur
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class, 'role_user');
     }
 
-    /**
-     * Retourne la liste des commentaires de l'utilisateur
-     *
-     * @return HasMany // Liste des commentaires de l'utilisateur
-     */
+    // Relation vers les commentaires de l'utilisateur
     public function comments(): HasMany
     {
         return $this->HasMany(Comment::class);
     }
 
-    /**
-     * Retourne la liste des actions de l'utilisateur
-     *
-     * @return HasMany // Liste des actions de l'utilisateur
-     */
+    // Relation vers les logs de l'utilisateur
     public function logs(): HasMany
     {
         return $this->HasMany(Log::class);

@@ -25,133 +25,79 @@ class Supplier extends Model
 
     ];
 
-    /**
-     * Retourne l'identifiant du fournisseur
-     *
-     * @return string // identifiant du fournisseur
-     */
+    // Retourne l'identifiant du fournisseur
     public function getId(): string
     {
         return $this->attributes['id'];
     }
 
-    /**
-     * Retourne le nom de l'entreprise du fournisseur.
-     *
-     * @return string // Nom d'entreprise du fournisseur
-     */
+    // Retourne le nom de l'entreprise fournisseur
     public function getCompanyName(): string
     {
         return $this->attributes['company_name'];
     }
 
-    /**
-     * Retourne le SIRET de l'entreprise du fournisseur.
-     *
-     * @return string // SIRET d'entreprise du fournisseur
-     */
+    // Retourne le SIRET du fournisseur
     public function getSiret(): string
     {
         return $this->attributes['siret'];
     }
 
-    /**
-     * Retourne l'email de contact du fournisseur.
-     *
-     * @return ?string // email de contact du fournisseur
-     */
+    // Retourne l'email de contact du fournisseur
     public function getEmail(): ?string
     {
         return $this->attributes['email'];
     }
 
-    /**
-     * Retourne le numéro de téléphone de contact du fournisseur.
-     *
-     * @return ?string // numéro de téléphone de contact du fournisseur
-     */
+    // Retourne le telephone du fournisseur
     public function getPhoneNumber(): ?string
     {
         return $this->attributes['phone_number'];
     }
 
-    /**
-     * Retourne le nom du contact dans l'entreprise fournisseur.
-     *
-     * @return ?string // nom du contact dans l'entreprise fournisseur
-     */
+    // Retourne le nom du contact fournisseur
     public function getContactName(): ?string
     {
         return $this->attributes['contact_name'];
     }
 
-    /**
-     * Retourne l'adresse du fournisseur.
-     *
-     * @return ?string
-     */
+    // Retourne l'adresse du fournisseur
     public function getAddress(): ?string
     {
         return $this->attributes['address'] ?? null;
     }
 
-    /**
-     * Retourne l'IBAN du fournisseur.
-     *
-     * @return ?string
-     */
+    // Retourne l'IBAN du fournisseur
     public function getIban(): ?string
     {
         return $this->attributes['iban'] ?? null;
     }
 
-    /**
-     * Retourne le BIC du fournisseur.
-     *
-     * @return ?string
-     */
+    // Retourne le BIC du fournisseur
     public function getBic(): ?string
     {
         return $this->attributes['bic'] ?? null;
     }
 
-    /**
-     * Retourne la description des spécialités de l'entreprise fournisseur.
-     *
-     * @return ?string // description des spécialités de l'entreprise fournisseur
-     */
+    // Retourne les specialites du fournisseur
     public function getSpeciality(): ?string
     {
         return $this->attributes['speciality'];
     }
 
-    /**
-     * Retourne les notes sur le fournisseur.
-     *
-     * @return ?string // notes sur le fournisseur.
-     */
+    // Retourne les notes sur le fournisseur
     public function getNote(): ?string
     {
         return $this->attributes['note'];
     }
 
-    /**
-     * Retourne true si le fournisseur est considéré comme valide, false sinon.
-     * Un fournisseur valide est un fournisseur auprès duquel il est possible de commander.
-     *
-     * @return bool // Si le fournisseur est valide
-     */
+    // Verifie si le fournisseur est valide
     public function isValid(): bool
     {
         return $this->attributes['is_valid'];
     }
 
-    /**
-     * Définit le nom de l'entreprise du fournisseur
-     *
-     * @param  string  $companyName  nom de l'entreprise fournisseur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit le nom de l'entreprise fournisseur
     public function setCompanyName(string $companyName, bool $save = true): void
     {
         if ($save) {
@@ -161,12 +107,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit le SIRET de l'entreprise du fournisseur
-     *
-     * @param  string  $siret  SIRET de l'entreprise fournisseur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit le SIRET du fournisseur
     public function setSiret(string $siret, bool $save = true): void
     {
         if ($save) {
@@ -176,12 +117,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit l'email de contact du fournisseur.
-     *
-     * @param  string  $email  email de contact du fournisseur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit l'email de contact du fournisseur
     public function setEmail(?string $email, bool $save = true): void
     {
         if ($save) {
@@ -191,12 +127,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit le numéro de téléphone de contact du fournisseur.
-     *
-     * @param  string  $phone_number  numéro de téléphone de contact du fournisseur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit le telephone du fournisseur
     public function setPhoneNumber(?string $phone_number, bool $save = true): void
     {
         if ($save) {
@@ -206,12 +137,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit le nom du contact dans l'entreprise fournisseur.
-     *
-     * @param  string  $contact_name  nom du contact dans l'entreprise fournisseur
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit le nom du contact fournisseur
     public function setContactName(string $contact_name, bool $save = true): void
     {
         if ($save) {
@@ -221,9 +147,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit l'adresse du fournisseur.
-     */
+    // Definit l'adresse du fournisseur
     public function setAddress(?string $address, bool $save = true): void
     {
         if ($save) {
@@ -233,9 +157,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit l'IBAN du fournisseur.
-     */
+    // Definit l'IBAN du fournisseur
     public function setIban(?string $iban, bool $save = true): void
     {
         if ($save) {
@@ -245,9 +167,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit le BIC du fournisseur.
-     */
+    // Definit le BIC du fournisseur
     public function setBic(?string $bic, bool $save = true): void
     {
         if ($save) {
@@ -257,12 +177,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit la description des spécialités de l'entreprise fournisseur.
-     *
-     * @param  string  $speciality  description des spécialités de l'entreprise fournisseur.
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit les specialites du fournisseur
     public function setSpeciality(string $speciality, bool $save = true): void
     {
         if ($save) {
@@ -272,12 +187,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit le texte des notes sur le fournisseur.
-     *
-     * @param  string  $note  texte des notes sur le fournisseur.
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit les notes sur le fournisseur
     public function setNote(?string $note, bool $save = true): void
     {
         if ($save) {
@@ -287,13 +197,7 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Définit si le fournisseur est considéré comme valide, false sinon.
-     * Un fournisseur valide est un fournisseur auprès duquel il est possible de commander.
-     *
-     * @param  bool  $is_valid  true si le fournisseur est considéré comme valide, false sinon.
-     * @param  bool  $save  si la donnée doit directement être sauvegardée en base de données
-     */
+    // Definit la validite du fournisseur
     public function setValidity(bool $is_valid, bool $save = true): void
     {
         if ($save) {
@@ -303,41 +207,25 @@ class Supplier extends Model
         }
     }
 
-    /**
-     * Retourne la date de la dernière modification du fournisseur
-     *
-     * @return ?string // date
-     */
+    // Retourne la date de derniere modification
     public function getLastUpdateDate(): ?string
     {
         return $this->attributes[$this->getUpdatedAtColumn()];
     }
 
-    /**
-     * Retourne la date de création du fournisseur
-     *
-     * @return string // date
-     */
+    // Retourne la date de creation du fournisseur
     public function getCreationDate(): string
     {
         return $this->attributes[$this->getCreatedAtColumn()];
     }
 
-    /**
-     * Retourne la liste des commandes du fournisseur
-     *
-     * @return Collection // Collection (liste) des commandes du fournisseur
-     */
+    // Retourne les commandes du fournisseur
     public function getOrders(): Collection
     {
         return $this->getAttribute('orders');
     }
 
-    /**
-     * Retourne la liste des commandes du fournisseur
-     *
-     * @return HasMany // Liste des commandes du fournisseur
-     */
+    // Relation vers les commandes du fournisseur
     public function orders(): HasMany
     {
         return $this->hasMany(Order::class);

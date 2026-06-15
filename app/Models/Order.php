@@ -43,52 +43,31 @@ class Order extends Model
         'signed_at' => 'datetime',
     ];
 
-    /**
-     * Retourne l'identifiant de la commande
-     *
-     * @return string // identifiant de la commande
-     */
+    // Retourne l'identifiant de la commande
     public function getId(): string
     {
         return $this->attributes['id'];
     }
 
-    /**
-     * Retourne le titre/la désignation de la commande
-     *
-     * @return string // titre de la commande
-     */
+    // Retourne le titre de la commande
     public function getTitle(): string
     {
         return $this->attributes['title'];
     }
 
-    /**
-     * Retourne le numéro de la commande
-     *
-     * @return string // numéro de la commande
-     */
+    // Retourne le numero de la commande
     public function getOrderNumber(): string
     {
         return $this->attributes['order_num'];
     }
 
-    /**
-     * Retourne la description de la commande
-     *
-     * @return string|null // description de la commande
-     */
+    // Retourne la description de la commande
     public function getDescription(): ?string
     {
         return $this->attributes['description'];
     }
 
-    /**
-     * Retourne le statut de la commande
-     *
-     * @param  bool  $noEnum  Si le résultat ne doit pas retourner une énumération mais un string
-     * @return Status|string // Statut de la commande
-     */
+    // Retourne le statut de la commande
     public function getStatus(bool $noEnum = false): Status|string
     {
         $status = $this->attributes['status'];
@@ -96,21 +75,13 @@ class Order extends Model
         return $noEnum ? $status : Status::from($status);
     }
 
-    /**
-     * Retourne le coût en euros total de la commande
-     *
-     * @return string|null // coût en euros de la commande
-     */
+    // Retourne le cout total de la commande
     public function getCost(): ?string
     {
         return $this->attributes['cost'];
     }
 
-    /**
-     * Retourne le coût formaté avec la devise en euro en chaîne de caractères.
-     *
-     * @return string le coût formaté en euro ou 'Non communiqué' si le coût n'est pas encore indiqué.
-     */
+    // Retourne le cout formate en euros
     public function getCostFormatted(): string
     {
         if (is_null($this->getCost())) {
@@ -120,21 +91,13 @@ class Order extends Model
         return number_format($this->getCost(), 2, ',', ' ').' €';
     }
 
-    /**
-     * Retourne le numéro du devis associé à la commande
-     *
-     * @return string|null // Numero du devis de la commande
-     */
+    // Retourne le numero du devis
     public function getQuoteNumber(): ?string
     {
         return $this->attributes['quote_num'];
     }
 
-    /**
-     * Retourne l'url du devis.html/css avec bootstrap)
-     *
-     * @return string|null l'url du devis ou null si le devis n'est pas encore enregistré.
-     */
+    // Retourne l'URL du devis
     public function getUrlQuote(): ?string
     {
         $path_quote = $this->getAttributeValue('path_quote');
@@ -145,11 +108,7 @@ class Order extends Model
         return Storage::url($path_quote);
     }
 
-    /**
-     * Retourne l'url du bon de commande.
-     *
-     * @return string|null l'url du bon de commande ou null si le bon de commande n'est pas encore enregistré.
-     */
+    // Retourne l'URL du bon de commande
     public function getUrlPurchaseOrder(): ?string
     {
         $path_purchase_order = $this->getAttributeValue('path_purchase_order');
@@ -169,11 +128,7 @@ class Order extends Model
         return Storage::url($path);
     }
 
-    /**
-     * Retourne l'url du bon de livraison.
-     *
-     * @return string|null l'url du bon de livraison ou null si le bon de livraison n'est pas encore enregistré.
-     */
+    // Retourne l'URL du bon de livraison
     public function getUrlDeliveryNote(): ?string
     {
         $path_delivery_note = $this->getAttributeValue('path_delivery_note');
@@ -184,95 +139,57 @@ class Order extends Model
         return Storage::url($path_delivery_note);
     }
 
-    /**
-     * Retourne la date de la dernière modification de la commande
-     *
-     * @return ?string // date
-     */
+    // Retourne la date de derniere modification
     public function getLastUpdateDate(): ?string
     {
         return $this->attributes[$this->getUpdatedAtColumn()];
     }
 
-    /**
-     * Retourne la date de création de la commande
-     *
-     * @return string // date
-     */
+    // Retourne la date de creation de la commande
     public function getCreationDate(): string
     {
         return $this->attributes[$this->getCreatedAtColumn()];
     }
 
-    /**
-     * Retourne les colis de la commande
-     *
-     * @param  bool  $foreRefresh  garantir de récupérer les informations depuis la base de données en toutes circonstances
-     * @return Collection // Colis
-     */
+    // Retourne les colis de la commande
     public function getPackages(bool $foreRefresh = false): Collection
     {
         return $foreRefresh ? $this->packages()->getResults() : $this->getAttribute('packages');
     }
 
-    /**
-     * Retourne le fournisseur de la commande
-     *
-     * @return Supplier // Fournisseur de la commande
-     */
+    // Retourne le fournisseur de la commande
     public function getSupplier(): Supplier
     {
         return $this->getAttribute('supplier');
     }
 
-    /**
-     * Retourne le rôle correspondant au département de la commande
-     *
-     * @return Role // Département (rôle) de la commande
-     */
+    // Retourne le departement de la commande
     public function getDepartment(): Role
     {
         return $this->getAttribute('department');
     }
 
-    /**
-     * Retourne la collection (liste) de logs associés à la commande (type Log)
-     *
-     * @return Collection // Collection (liste) de logs de la commande
-     */
+    // Retourne les logs de la commande
     public function getLogs(): Collection
     {
         return $this->logs()->getResults();
     }
 
-    /**
-     * Retourne le premier log associé à la création de la commande
-     *
-     * @return Log // Le premier log associé à la création de la commande
-     */
+    // Retourne le premier log de la commande
     public function getFirstLog(): Log
     {
         // TODO Peut-être faire un cache ?
         return $this->getLogs()->first();
     }
 
-    /**
-     * Retourne l'auteur de la commande (mentionné dans le premier log)
-     *
-     * @return User // L'utilisateur auteur de la commande
-     */
+    // Retourne l'auteur de la commande
     public function getAuthor(): User
     {
         // TODO Peut-être faire un cache ?
         return $this->author()->getResults();
     }
 
-    /**
-     * Définir le titre d'une commande. Cela va automatiquement passer la première lettre en majuscule
-     *
-     * @param  string  $title  Titre à définir qui doit décrire la commande de manière assez concise (taille max de 255)
-     * @param  bool  $save  : si la fonction sauvegarde en base de données
-     */
+    // Definit le titre de la commande
     public function setTitle(string $title, bool $save = true): void
     {
         $title = ucfirst($title);
@@ -283,12 +200,7 @@ class Order extends Model
         }
     }
 
-    /**
-     * Définir le numéro d'une commande.
-     *
-     * @param  string  $order_num  Numéro de commande à définir
-     * @param  bool  $save  : si la fonction sauvegarde en base de données
-     */
+    // Definit le numero de la commande
     public function setOrderNumber(string $order_num, bool $save = true): void
     {
         if ($save) {
@@ -298,12 +210,7 @@ class Order extends Model
         }
     }
 
-    /**
-     * Définir la déscription longue de la commande.
-     *
-     * @param  string  $description  Description de commande à définir
-     * @param  bool  $save  : si la fonction sauvegarde en base de données
-     */
+    // Definit la description de la commande
     public function setDescription(string $description, bool $save = true): void
     {
         if ($save) {
@@ -313,12 +220,7 @@ class Order extends Model
         }
     }
 
-    /**
-     * Définir le status de la commande.
-     *
-     * @param  Status|string  $status  Status de commande à définir
-     * @param  bool  $save  : si la fonction sauvegarde en base de données (true par défaut)
-     */
+    // Definit le statut de la commande
     public function setStatus(Status|string $status, bool $save = true): void
     {
         $status = is_string($status) ? $status : $status->value;
@@ -330,12 +232,7 @@ class Order extends Model
 
     }
 
-    /**
-     * Définir le coût en euros total de la commande.
-     *
-     * @param  float  $cost  Coût de la commande à définir
-     * @param  bool  $save  : si la fonction sauvegarde en base de données
-     */
+    // Definit le cout total de la commande
     public function setCost(float $cost, bool $save = true): void
     {
         if ($save) {
@@ -345,12 +242,7 @@ class Order extends Model
         }
     }
 
-    /**
-     * Définir le numéro du devis la commande.
-     *
-     * @param  string  $quote_num  Coût de la commande à définir.
-     * @param  bool  $save  : si la fonction sauvegarde en base de données
-     */
+    // Definit le numero du devis
     public function setQuoteNumber(string $quote_num, bool $save = true): void
     {
         if ($save) {
@@ -391,20 +283,13 @@ class Order extends Model
 
     // TODO peut-être un peut factoriser l'upload des fichiers mais... plus tard
 
-    /**
-     * Enregistrer le fichier du devis
-     *
-     * @param  Request  $request  : la requête HTTP issue du controlleur contenant le fichier à uploader
-     * @param  bool  $save  : si la fonction sauvegarde en base de données (true par défaut)
-     * @return bool true si l'enregistrement du fichier a fonctionné, false sinon
-     */
+    // Enregistre le fichier du devis
     public function uploadQuote(Request $request, bool $save = true): bool
     {
         $request->validate([
             'quote' => 'required|mimes:pdf,doc,docx|max:10240', // Max 10MB
         ]);
 
-        /* @var UploadedFile $file */
         $file = $request->file('quote');
         if ($file) {
 
@@ -440,21 +325,13 @@ class Order extends Model
         return false;
     }
 
-    /**
-     * Enregistrer le fichier du bon de commande
-     *
-     * @param  Request  $request  : la requête HTTP issue du controlleur contenant le fichier à uploader
-     * @param  bool  $is_signed  : indique si le devis est signé ou non
-     * @param  bool  $save  : si la fonction sauvegarde en base de données (true par défaut)
-     * @return bool true si l'enregistrement du fichier a fonctionné, false sinon
-     */
+    // Enregistre le fichier du bon de commande
     public function uploadPurchaseOrder(Request $request, ?bool $is_signed = false, bool $save = true): bool
     {
         $request->validate([
             'purchase_order' => 'required|mimes:pdf,doc,docx|max:10240', // Max 10MB
         ]);
 
-        /* @var UploadedFile $file */
         $file = $request->file('purchase_order');
         if ($file) {
 
@@ -495,20 +372,13 @@ class Order extends Model
         return false;
     }
 
-    /**
-     * Enregistrer le fichier du bon de livraison
-     *
-     * @param  Request  $request  : la requête HTTP issue du controlleur contenant le fichier à uploader
-     * @param  bool  $save  : si la fonction sauvegarde en base de données (true par défaut)
-     * @return bool true si l'enregistrement du fichier a fonctionné, false sinon
-     */
+    // Enregistre le fichier du bon de livraison
     public function uploadDeliveryNote(Request $request, bool $save = true): bool
     {
         $request->validate([
             'delivery_note' => 'required|mimes:pdf,doc,docx|max:10240', // Max 10MB
         ]);
 
-        /* @var UploadedFile $file */
         $file = $request->file('delivery_note');
         if ($file) {
 
@@ -569,61 +439,37 @@ class Order extends Model
         $this->save();
     }
 
-    /**
-     * Retourne la liste des colis de la commande
-     *
-     * @return HasMany // Liste des colis de la commande
-     */
+    // Relation vers les colis de la commande
     public function packages(): HasMany
     {
         return $this->hasMany(Package::class);
     }
 
-    /**
-     * Retourne la liste le fournisseur de la commande
-     *
-     * @return BelongsTo // Fournisseur de la commande
-     */
+    // Relation vers le fournisseur de la commande
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
     }
 
-    /**
-     * Retourne la liste des commentaires de la commande
-     *
-     * @return HasMany // Liste des commentaires de la commande
-     */
+    // Relation vers les commentaires de la commande
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
-    /**
-     * Retourne la liste des actions associées à la commande
-     *
-     * @return HasMany // Liste des actions de la commande
-     */
+    // Relation vers les logs de la commande
     public function logs(): HasMany
     {
         return $this->hasMany(Log::class);
     }
 
-    /**
-     * Retourne le rôle du département associé à la commande
-     *
-     * @return BelongsTo // Rôle du département
-     */
+    // Relation vers le departement de la commande
     public function department(): BelongsTo
     {
         return $this->belongsTo(Role::class, 'department_id');
     }
 
-    /**
-     * Retourne l'utilisateur, auteur de la commande
-     *
-     * @return BelongsTo // Utilisateur, auteur de la commande
-     */
+    // Relation vers l'auteur de la commande
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');

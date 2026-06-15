@@ -15,81 +15,48 @@ class Comment extends Model
         'order_id',
     ];
 
-    /**
-     * Retourne l'identifiant du commentaire
-     *
-     * @return string // identifiant du commentaire
-     */
+    // Retourne l'identifiant du commentaire
     public function getId(): string
     {
         return $this->attributes['id'];
     }
 
-    /**
-     * Retourne l'identifiant de la commande du commentaire
-     *
-     * @return string // identifiant de la commande du commentaire
-     */
+    // Retourne l'identifiant de la commande
     public function getOrderId(): string
     {
         return $this->attributes['order_id'];
     }
 
-    /**
-     * Retourne le contenu du commentaire
-     *
-     * @return string // contenu du commentaire
-     */
+    // Retourne le contenu du commentaire
     public function getContent(): string
     {
         return $this->attributes['content'];
     }
 
-    /**
-     * Retourne la date de la dernière modification du commentaire
-     *
-     * @return ?string // date
-     */
+    // Retourne la date de derniere modification
     public function getLastUpdateDate(): ?string
     {
         return $this->attributes[$this->getUpdatedAtColumn()];
     }
 
-    /**
-     * Retourne la date de création du commentaire
-     *
-     * @return string // date
-     */
+    // Retourne la date de creation du commentaire
     public function getCreationDate(): string
     {
         return $this->attributes[$this->getCreatedAtColumn()];
     }
-    /**
-     * Retourne l'auteur de l'action, l'utilisateur associé au commentaire
-     *
-     * @return User // Utilisateur auteur de l'action / associé au commentaire
-     */
+    // Retourne l'auteur du commentaire
     public function getAuthor(): User
     {
         return $this->getAttribute('author');
     }
 
-    /**
-     * Retourne la commande dont appartient le commentaire
-     *
-     * @return Order // Commande du commentaire
-     */
+    // Retourne la commande associee au commentaire
     public function getOrder(): Order
     {
         return $this->getAttribute('order');
     }
 
-    /**
-     * Définit le contenu du commentaire
-     *
-     * @param  string  $content  contenu du commentaire.
-     * @param  bool  $save  : si la fonction sauvegarde en base de données
-     */
+    // Definit le contenu du commentaire
     public function setContent(string $content, bool $save = true): void
     {
         if ($save) {
@@ -99,21 +66,13 @@ class Comment extends Model
         }
     }
 
-    /**
-     * Retourne l'utilisateur, auteur de la commande
-     *
-     * @return BelongsTo // Utilisateur, auteur de la commande
-     */
+    // Relation vers l'auteur du commentaire
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    /**
-     * Retourne la commande concernée par le commentaire
-     *
-     * @return BelongsTo // Commande associée au commentaire
-     */
+    // Relation vers la commande du commentaire
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);

@@ -16,72 +16,43 @@ class Log extends Model
         'order_id',
     ];
 
-    /**
-     * Retourne l'identifiant du log
-     *
-     * @return string // identifiant du log
-     */
+    // Retourne l'identifiant du log
     public function getId(): string
     {
         return $this->attributes['id'];
     }
 
-    /**
-     * Retourne l'identifiant de la commande du log
-     *
-     * @return string // identifiant de la commande du log
-     */
+    // Retourne l'identifiant de la commande du log
     public function getOrderId(): string
     {
         return $this->attributes['order_id'];
     }
 
-    /**
-     * Retourne le contenu du log
-     *
-     * @return string // contenu du log
-     */
+    // Retourne le contenu du log
     public function getContent(): string
     {
         return $this->attributes['content'];
     }
 
-    /**
-     * Retourne l'auteur de l'action, l'utilisateur associé au log
-     *
-     * @return User // Utilisateur auteur de l'action / associé au log
-     */
+    // Retourne l'auteur du log
     public function getAuthor(): User
     {
         return $this->getAttribute('author');
     }
 
-    /**
-     * Retourne la commande dont appartient le log
-     *
-     * @return Order // Commande du log
-     */
+    // Retourne la commande associee au log
     public function getOrder(): Order
     {
         return $this->getAttribute('order');
     }
 
-    /**
-     * Retourne la date de création du colis
-     *
-     * @return string // date
-     */
+    // Retourne la date de creation du log
     public function getCreationDate(): string
     {
         return $this->attributes[$this->getCreatedAtColumn()];
     }
 
-    /**
-     * Définit le contenu du log
-     *
-     * @param  string  $content  contenu du log.
-     * @param  bool  $save  : si la fonction sauvegarde en base de données
-     */
+    // Definit le contenu du log
     public function setContent(string $content, bool $save = true): void
     {
         if ($save) {
@@ -91,21 +62,13 @@ class Log extends Model
         }
     }
 
-    /**
-     * Retourne l'auteur de l'action
-     *
-     * @return BelongsTo // Auteur de l'action
-     */
+    // Relation vers l'auteur du log
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'author_id');
     }
 
-    /**
-     * Retourne la commande dont appartient le log
-     *
-     * @return BelongsTo // Commande du log
-     */
+    // Relation vers la commande du log
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class);
