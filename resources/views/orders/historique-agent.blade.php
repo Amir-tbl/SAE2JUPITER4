@@ -1,3 +1,4 @@
+{{-- Historique des commandes passées par l'agent --}}
 @extends('base')
 
 @section('page-title', 'Historique')
