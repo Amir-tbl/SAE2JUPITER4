@@ -200,14 +200,7 @@ class DashboardController extends BaseController
         $delaisMois = $signesMois->map(fn ($o) => $o->created_at->diffInDays($o->updated_at))->filter();
         $statsDelaiMoyen = $delaisMois->isNotEmpty() ? round($delaisMois->avg(), 1) : 0;
         // Departement le plus actif (BC signes ce mois)
-        $topDeptRow = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
-            ->whereMonth('updated_at', $now->month)->whereYear('updated_at', $now->year)
-            ->select('department_id', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('department_id')
-            ->orderByDesc('cnt')
-            ->with('department')
-            ->first();
-        $topDepartment = $topDeptRow?->department?->getName() ?? '—';
+        $topDepartment = $this->getTopDepartement($now->month, $now->year);
 
         return view('dashboard.directeur', compact(
             'user', 'kpiEnAttente', 'kpiSignesAujourdhui', 'kpiSignesMois',
@@ -377,5 +370,19 @@ class DashboardController extends BaseController
             'user', 'kpis', 'roleStats', 'departments', 'recentOrders',
             'systemStats', 'recentLogs'
         ));
+    }
+
+    private function getTopDepartement(int $month, int $year): string
+    {
+        $row = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
+            ->whereMonth('updated_at', $month)
+            ->whereYear('updated_at', $year)
+            ->select('department_id', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('department_id')
+            ->orderByDesc('cnt')
+            ->with('department')
+            ->first();
+
+        return $row?->department?->getName() ?? '—';
     }
 }
