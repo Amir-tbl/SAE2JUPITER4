@@ -156,7 +156,6 @@ class OrderController extends BaseController
         $query->orderBy('updated_at', 'asc');
 
         // --- 4. EXECUTION ---
-        $query->with(['supplier', 'department', 'author']);
         $orders = $query->paginate(20)->withQueryString();
 
         $suppliers = Supplier::all(['id', 'company_name', 'is_valid']); // Récupération uniquement des informations utiles à propos des fournisseurs
