@@ -9,7 +9,7 @@ class LogController extends BaseController
 {
     public function index(): View
     {
-        $logs = Log::with(['author', 'order'])->orderByDesc('created_at')->limit(200)->get();
+        $logs = Log::orderByDesc('created_at')->limit(200)->get();
 
         $totalLogs = Log::count();
         $todayLogs = Log::whereDate('created_at', today())->count();
