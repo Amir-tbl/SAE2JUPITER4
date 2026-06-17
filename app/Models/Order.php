@@ -414,6 +414,20 @@ class Order extends Model
         return false;
     }
 
+
+    // Scope : commandes en attente de signature directeur
+    public function scopeEnAttenteSignature($query)
+    {
+        return $query->where('status', \Database\Seeders\Status::BON_DE_COMMANDE_NON_SIGNE->value);
+    }
+
+    // Scope : commandes urgentes (en attente de signature depuis plus de X jours)
+    public function scopeUrgent($query, int $jours = 7)
+    {
+        return $query->enAttenteSignature()
+            ->where('created_at', '<', now()->subDays($jours));
+    }
+
     // Relation articles de la commande
     public function articles(): HasMany
     {
