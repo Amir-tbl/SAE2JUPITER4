@@ -15,7 +15,7 @@ class UserController extends BaseController
 {
     public function index(): View
     {
-        $users = User::with('roles')->orderBy('last_name')->get();
+        $users = User::orderBy('last_name')->get();
         $roles = Role::orderBy('name')->get();
         $departments = Role::where('is_department', true)->orderBy('name')->get();
         $totalUsers = $users->count();
