@@ -64,7 +64,7 @@ return new class extends Migration
         });
 
         Schema::create('packages', function (Blueprint $table) {
-            $table->unsignedBigInteger('id')->autoIncrement();
+            $table->id();
             $table->foreignId('order_id')->constrained('orders', 'id')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
             $table->decimal('cost', 12, 2)
@@ -77,9 +77,6 @@ return new class extends Migration
                 ->nullable()
                 ->comment('Date de livraison si le colis à été reçu');
             $table->timestamps();
-
-            $table->primary(['id', 'order_id']);
-
         });
 
     }
@@ -89,7 +86,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('package');
+        Schema::dropIfExists('packages');
         Schema::dropIfExists('orders');
     }
 };
