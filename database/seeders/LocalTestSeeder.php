@@ -18,10 +18,7 @@ class LocalTestSeeder extends Seeder
 {
     use WithoutModelEvents;
 
-    /**
-     * Seed the application's database.
-     * @throws Exception
-     */
+    // Remplit la base avec des données de test
     public function run(): void
     {
         $nbSuppliers = 10;
@@ -69,7 +66,6 @@ class LocalTestSeeder extends Seeder
             ->make()
             ->each(function (Order $order) use ($departments, $suppliers) {
                 // Pour chaque commande associer un fournisseur
-                /** @var User $author */
                 $department = $departments->random();
 
                 // Le département ne doit pas avoir aucun membre

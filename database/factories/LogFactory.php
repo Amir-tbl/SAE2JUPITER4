@@ -4,16 +4,10 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Log>
- */
+// Factory pour le modèle Log
 class LogFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    // Définit l'état par défaut du modèle
     public function definition(): array
     {
         return [

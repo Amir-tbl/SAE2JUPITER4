@@ -5,16 +5,10 @@ namespace Database\Factories;
 use Database\Seeders\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order>
- */
+// Factory pour le modèle Order
 class OrderFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    // Définit l'état par défaut du modèle
     public function definition(): array
     {
         $orderStats = Status::cases();

@@ -4,16 +4,10 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Package>
- */
+// Factory pour le modèle Package
 class PackageFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    // Définit l'état par défaut du modèle
     public function definition(): array
     {
         $shipping_date = fake()->dateTimeThisYear('+3 years');

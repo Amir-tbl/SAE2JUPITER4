@@ -5,16 +5,10 @@ namespace Database\Factories;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
- */
+// Factory pour le modèle User
 class UserFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    // Définit l'état par défaut du modèle
     public function definition(): array
     {
         return [
@@ -26,9 +20,7 @@ class UserFactory extends Factory
         ];
     }
 
-    /**
-     * Configure the model factory.
-     */
+    // Configure la factory du modèle
     //    public function configure(): static
     //    {
     //
