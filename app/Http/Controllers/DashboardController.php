@@ -168,7 +168,7 @@ class DashboardController extends BaseController
         $now = now();
 
         // 6 KPIs
-        $kpiEnAttente = Order::where('status', Status::BON_DE_COMMANDE_NON_SIGNE->value)->count();
+        $kpiEnAttente = Order::enAttenteSignature()->count();
         $kpiSignesAujourdhui = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
             ->whereDate('updated_at', today())->count();
         $kpiSignesMois = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
@@ -178,8 +178,7 @@ class DashboardController extends BaseController
                 ->whereMonth('updated_at', $now->month)->whereYear('updated_at', $now->year)
                 ->sum('total_ttc'), 2, ',', ' '
         ) . ' €';
-        $kpiUrgents = Order::where('status', Status::BON_DE_COMMANDE_NON_SIGNE->value)
-            ->where('created_at', '<', $now->copy()->subDays(7))->count();
+        $kpiUrgents = Order::urgent(7)->count();
         $kpiTotalTraites = Order::whereIn('status', [
             Status::BON_DE_COMMANDE_SIGNE->value,
             Status::BON_DE_COMMANDE_REFUSE->value,
@@ -187,7 +186,7 @@ class DashboardController extends BaseController
 
         // 5 BC en attente (les plus anciens d'abord)
         $bcEnAttente = Order::with(['supplier', 'department', 'author'])
-            ->where('status', Status::BON_DE_COMMANDE_NON_SIGNE->value)
+            ->enAttenteSignature()
             ->orderBy('created_at', 'asc')
             ->limit(5)
             ->get();
@@ -195,22 +194,13 @@ class DashboardController extends BaseController
         // Stats mensuelles
         $statsSignesMois = $kpiSignesMois;
         $statsMontantSigne = $kpiMontantMois;
-        $statsDelaiMoyen = round(
-            Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
-                ->whereMonth('updated_at', $now->month)->whereYear('updated_at', $now->year)
-                ->get()
-                ->avg(fn ($o) => $o->created_at->diffInDays($o->updated_at)),
-            1
-        );
-        // Departement le plus actif (BC signes ce mois)
-        $topDeptRow = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
+        $signesMois = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
             ->whereMonth('updated_at', $now->month)->whereYear('updated_at', $now->year)
-            ->select('department_id', DB::raw('COUNT(*) as cnt'))
-            ->groupBy('department_id')
-            ->orderByDesc('cnt')
-            ->with('department')
-            ->first();
-        $topDepartment = $topDeptRow?->department?->getName() ?? '—';
+            ->get();
+        $delaisMois = $signesMois->map(fn ($o) => $o->created_at->diffInDays($o->updated_at))->filter();
+        $statsDelaiMoyen = $delaisMois->isNotEmpty() ? round($delaisMois->avg(), 1) : 0;
+        // Departement le plus actif (BC signes ce mois)
+        $topDepartment = $this->getTopDepartement($now->month, $now->year);
 
         return view('dashboard.directeur', compact(
             'user', 'kpiEnAttente', 'kpiSignesAujourdhui', 'kpiSignesMois',
@@ -380,5 +370,19 @@ class DashboardController extends BaseController
             'user', 'kpis', 'roleStats', 'departments', 'recentOrders',
             'systemStats', 'recentLogs'
         ));
+    }
+
+    private function getTopDepartement(int $month, int $year): string
+    {
+        $row = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
+            ->whereMonth('updated_at', $month)
+            ->whereYear('updated_at', $year)
+            ->select('department_id', DB::raw('COUNT(*) as cnt'))
+            ->groupBy('department_id')
+            ->orderByDesc('cnt')
+            ->with('department')
+            ->first();
+
+        return $row?->department?->getName() ?? '—';
     }
 }

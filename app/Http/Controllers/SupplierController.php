@@ -91,7 +91,7 @@ class SupplierController extends BaseController
 
         $validated = $request->validate([
             'company_name' => 'required|string|max:255|unique:suppliers,company_name',
-            'siret' => 'nullable|string|max:14|unique:suppliers,siret',
+            'siret' => 'nullable|digits:14|unique:suppliers,siret',
             'email' => 'nullable|email|max:255',
             'phone_number' => 'nullable|string|max:30',
             'contact_name' => 'nullable|string|max:255',
@@ -103,6 +103,7 @@ class SupplierController extends BaseController
         ], [
             'company_name.required' => 'Le nom de l\'entreprise est obligatoire.',
             'company_name.unique' => 'Ce fournisseur existe déjà.',
+            'siret.digits' => 'Le SIRET doit contenir exactement 14 chiffres.',
             'siret.unique' => 'Ce SIRET est déjà utilisé.',
             'email.email' => 'L\'adresse email n\'est pas valide.',
         ]);
@@ -126,7 +127,7 @@ class SupplierController extends BaseController
 
         $validated = $request->validate([
             'company_name' => 'required|string|max:255|unique:suppliers,company_name,' . $supplier->id,
-            'siret' => 'required|string|size:14|unique:suppliers,siret,' . $supplier->id,
+            'siret' => 'required|digits:14|unique:suppliers,siret,' . $supplier->id,
             'email' => 'nullable|email|max:255',
             'phone_number' => 'nullable|string|max:30',
             'contact_name' => 'nullable|string|max:255',
@@ -136,6 +137,10 @@ class SupplierController extends BaseController
             'bic' => 'nullable|string|max:11',
             'note' => 'nullable|string',
             'is_valid' => 'nullable',
+        ], [
+            'siret.required' => 'Le SIRET est obligatoire.',
+            'siret.digits' => 'Le SIRET doit contenir exactement 14 chiffres.',
+            'siret.unique' => 'Ce SIRET est déjà utilisé.',
         ]);
 
         $validated['is_valid'] = (bool) ($validated['is_valid'] ?? false);

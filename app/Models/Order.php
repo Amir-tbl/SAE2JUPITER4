@@ -414,6 +414,33 @@ class Order extends Model
         return false;
     }
 
+
+
+    // Retourne le nombre de jours depuis la creation de la commande
+    public function getJoursAttente(): int
+    {
+        return (int) $this->created_at->diffInDays(now());
+    }
+
+    // Indique si la commande est urgente (en attente depuis plus de X jours)
+    public function isUrgent(int $jours = 7): bool
+    {
+        return $this->getJoursAttente() >= $jours;
+    }
+
+    // Scope : commandes en attente de signature directeur
+    public function scopeEnAttenteSignature($query)
+    {
+        return $query->where('status', \Database\Seeders\Status::BON_DE_COMMANDE_NON_SIGNE->value);
+    }
+
+    // Scope : commandes urgentes (en attente de signature depuis plus de X jours)
+    public function scopeUrgent($query, int $jours = 7)
+    {
+        return $query->enAttenteSignature()
+            ->where('created_at', '<', now()->subDays($jours));
+    }
+
     // Relation articles de la commande
     public function articles(): HasMany
     {
