@@ -22,11 +22,10 @@ class StatsController extends BaseController
             ->mapWithKeys(fn($row) => [$row->status => $row->count]);
 
         // Par departement
-        $byDepartment = Role::where('is_department', true)->get();
-        foreach ($byDepartment as $dept) {
-            $dept->orders_count = $dept->orders()->count();
-            $dept->orders_sum_total_ttc = $dept->orders()->sum('total_ttc');
-        }
+        $byDepartment = Role::where('is_department', true)
+            ->withCount('orders')
+            ->withSum('orders', 'total_ttc')
+            ->get();
 
         // Evolution mensuelle (12 derniers mois)
         $monthly = Order::select(DB::raw("DATE_FORMAT(created_at, '%Y-%m') as month"), DB::raw('COUNT(*) as count'), DB::raw('SUM(total_ttc) as montant'))
