@@ -69,12 +69,11 @@
         <tbody>
             @foreach($bcEnAttente as $order)
                 @php
-                    $joursAttente = (int) $order->created_at->diffInDays(now());
                     $pjCount = ($order->getAttribute('path_quote') ? 1 : 0) + ($order->getAttribute('path_purchase_order') ? 1 : 0) + ($order->getAttribute('path_delivery_note') ? 1 : 0);
                 @endphp
-                <tr style="{{ $joursAttente >= 7 ? 'background: #fef2f2;' : '' }}">
+                <tr style="{{ $order->isUrgent() ? 'background: #fef2f2;' : '' }}">
                     <td class="fw-semibold">
-                        @if($joursAttente >= 7)<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 4px;"></span>@endif
+                        @if($order->isUrgent())<span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; margin-right: 4px;"></span>@endif
                         {{ $order->getOrderNumber() }}
                     </td>
                     <td>{{ $order->author ? $order->author->getFirstName() . ' ' . $order->author->getLastName() : '—' }}</td>

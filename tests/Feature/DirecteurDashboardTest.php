@@ -98,3 +98,24 @@ test('le dashboard directeur est accessible a un utilisateur avec la permission 
 
     $response->assertStatus(200);
 });
+
+test('getJoursAttente retourne le nombre de jours depuis la creation', function () {
+    $order = makeOrderDir(['created_at' => now()->subDays(5)]);
+
+    expect($order->getJoursAttente())->toBe(5);
+});
+
+test('isUrgent retourne vrai apres 7 jours par defaut', function () {
+    $urgent = makeOrderDir(['created_at' => now()->subDays(8)]);
+    $recent = makeOrderDir(['created_at' => now()->subDays(3)]);
+
+    expect($urgent->isUrgent())->toBeTrue();
+    expect($recent->isUrgent())->toBeFalse();
+});
+
+test('isUrgent accepte un seuil personnalise', function () {
+    $order = makeOrderDir(['created_at' => now()->subDays(5)]);
+
+    expect($order->isUrgent(3))->toBeTrue();
+    expect($order->isUrgent(10))->toBeFalse();
+});

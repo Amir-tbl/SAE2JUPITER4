@@ -415,6 +415,19 @@ class Order extends Model
     }
 
 
+
+    // Retourne le nombre de jours depuis la creation de la commande
+    public function getJoursAttente(): int
+    {
+        return (int) $this->created_at->diffInDays(now());
+    }
+
+    // Indique si la commande est urgente (en attente depuis plus de X jours)
+    public function isUrgent(int $jours = 7): bool
+    {
+        return $this->getJoursAttente() >= $jours;
+    }
+
     // Scope : commandes en attente de signature directeur
     public function scopeEnAttenteSignature($query)
     {
