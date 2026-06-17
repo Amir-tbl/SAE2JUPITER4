@@ -195,13 +195,11 @@ class DashboardController extends BaseController
         // Stats mensuelles
         $statsSignesMois = $kpiSignesMois;
         $statsMontantSigne = $kpiMontantMois;
-        $statsDelaiMoyen = round(
-            Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
-                ->whereMonth('updated_at', $now->month)->whereYear('updated_at', $now->year)
-                ->get()
-                ->avg(fn ($o) => $o->created_at->diffInDays($o->updated_at)),
-            1
-        );
+        $signesMois = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
+            ->whereMonth('updated_at', $now->month)->whereYear('updated_at', $now->year)
+            ->get();
+        $delaisMois = $signesMois->map(fn ($o) => $o->created_at->diffInDays($o->updated_at))->filter();
+        $statsDelaiMoyen = $delaisMois->isNotEmpty() ? round($delaisMois->avg(), 1) : 0;
         // Departement le plus actif (BC signes ce mois)
         $topDeptRow = Order::where('status', Status::BON_DE_COMMANDE_SIGNE->value)
             ->whereMonth('updated_at', $now->month)->whereYear('updated_at', $now->year)
