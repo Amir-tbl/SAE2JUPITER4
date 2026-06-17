@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    // Crée la table comments
     public function up(): void
     {
         Schema::create('comments', function (Blueprint $table) {
@@ -20,9 +18,7 @@ return new class extends Migration
         });
     }
 
-    /*
-     * Reverse the migrations.
-     */
+    // Supprime la table comments
     public function down(): void
     {
         Schema::dropIfExists('comments');

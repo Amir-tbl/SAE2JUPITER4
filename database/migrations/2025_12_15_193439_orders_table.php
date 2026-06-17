@@ -7,9 +7,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    // Crée les tables orders et packages
     public function up(): void
     {
         // Get values of ENUM column (ex: etats) with app:
@@ -81,9 +79,7 @@ return new class extends Migration
 
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    // Supprime les tables orders et packages
     public function down(): void
     {
         Schema::dropIfExists('packages');

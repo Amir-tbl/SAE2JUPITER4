@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    // Crée les tables roles, role_user, permissions, permission_role
     public function up(): void
     {
         // Roles
@@ -44,9 +42,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    // Supprime les tables roles et permissions
     public function down(): void
     {
         Schema::dropIfExists('permission_role');

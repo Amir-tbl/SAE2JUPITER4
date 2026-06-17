@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    // Crée les tables users et sessions
     public function up(): void
     {
         // En anglais: "users" table ; clé étrangère "user_id"; clé primaire "id" ;
@@ -45,9 +43,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    // Supprime les tables users et sessions
     public function down(): void
     {
         Schema::dropIfExists('users');

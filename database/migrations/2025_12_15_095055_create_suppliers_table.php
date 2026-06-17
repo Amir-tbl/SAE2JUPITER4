@@ -6,9 +6,7 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
+    // Crée la table suppliers
     public function up(): void
     {
         // TODO pas d'adresse ?
@@ -34,9 +32,7 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
+    // Supprime la table suppliers
     public function down(): void
     {
         Schema::dropIfExists('suppliers');
