@@ -23,7 +23,7 @@ C'est tout. Docker embarque PHP, Apache, MariaDB et Composer.
 
 ```bash
 # 1. Cloner le depot
-git clone https://github.com/VOTRE-USERNAME/SAE2JUPITER4.git
+git clone https://github.com/Amir-tbl/SAE2JUPITER4.git
 cd SAE2JUPITER4
 
 # 2. Copier le fichier d'environnement
