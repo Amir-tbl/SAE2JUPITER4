@@ -1,5 +1,7 @@
 # SAE2 JUPITER4 -- Suivi de Colis IUT Villetaneuse
 
+> 📂 **Documents a rendre** — Les documents de **choix des groupes / roles** et de **base de donnees** se trouvent dans le dossier [`DOC_A_RENDRE/`](./DOC_A_RENDRE).
+
 Application web de suivi de colis pour l'IUT de Villetaneuse (Sorbonne Paris Nord).
 
 Chaque commande suit un parcours precis : creation par un agent de departement, validation par le service financier, signature par le directeur, puis reception et distribution par le service postal (CRIT). L'application permet a chaque acteur de suivre l'avancement en temps reel et d'intervenir a son niveau.
