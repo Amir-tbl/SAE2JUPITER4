@@ -50,7 +50,7 @@ Si vous preferez travailler sans Docker :
 ```bash
 # Prerequis : PHP 8.2+, Composer, MariaDB
 
-git clone https://github.com/VOTRE-USERNAME/SAE2JUPITER4.git
+git clone https://github.com/Amir-tbl/SAE2JUPITER4.git
 cd SAE2JUPITER4
 
 composer install
