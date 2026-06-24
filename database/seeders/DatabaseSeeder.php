@@ -157,14 +157,14 @@ class DatabaseSeeder extends Seeder
         $roles = $roles->sort(fn ($a, $b) => $a['id'] - $b['id']);
         Role::upsert($roles->map(fn ($r) => [
             'name' => $r['name'], 'description' => $r['description'], 'is_department' => $r['is_department'],
-        ])->toArray(), uniqueBy: ['id'], update: ['description', 'is_department']);
+        ])->toArray(), uniqueBy: ['id'], update: ['name', 'description', 'is_department']);
 
         // Permissions
         $permissions = PermissionValue::cases();
         sort($permissions);
         $permissionElements = [];
         foreach ($permissions as $permission) {
-            $permissionElements[] = ['name' => $permission->name, 'created_at' => now()];
+            $permissionElements[] = ['id' => $permission->value, 'name' => $permission->name, 'created_at' => now()];
         }
         DB::table('permissions')->upsert($permissionElements, uniqueBy: ['id']);
 
