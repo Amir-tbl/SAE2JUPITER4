@@ -1,3 +1,4 @@
+{{-- Création de commande — étape 2 : ajout des articles, quantités et montants --}}
 @extends('base')
 
 @section('header')

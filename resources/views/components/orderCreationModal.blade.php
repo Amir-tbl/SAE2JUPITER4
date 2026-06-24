@@ -1,6 +1,6 @@
 @use(Database\Seeders\Status)
 
-<!-- Modal de création de commande -->
+<!-- Modal de création de commande (ouverture rapide depuis le tableau de bord agent) -->
 {{-- TODO ajouter un message d'avertissement de validation de formulaire --}}
 {{--TODO: Il n'est pas possible de définir une langue par défaut bootstrap mais on peut changer la valeur des attribtuts (notamment pour le message qui apparaît quand on valide sans remplir les champs requis : https://stackoverflow.com/questions/23731862/how-can-i-set-bootstrap-language-manually--}}
 {{--TODO pour traduire le message "champ requis", la solution de l'attribut "oninvalid="this.setCustomValidity('Veuillez remplir un titre de commande avant de valider !')" sur l'input ne fonctionne pas. Peut-être trouver une solution (pas prioritaire)--}}

@@ -1,3 +1,4 @@
+{{-- Création de commande — étape 3 : récapitulatif et confirmation --}}
 @extends('base')
 
 @section('header')

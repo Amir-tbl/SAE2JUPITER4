@@ -1,3 +1,4 @@
+{{-- Création de commande — étape 1 : informations générales de la demande --}}
 @extends('base')
 
 @section('header')
