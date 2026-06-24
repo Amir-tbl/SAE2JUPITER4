@@ -16,6 +16,7 @@ class AppServiceProvider extends ServiceProvider
     // Initialise les services de l'application
     public function boot(): void
     {
+        // Utilise le style Bootstrap 5 pour la pagination
         Paginator::useBootstrapFive();
     }
 }

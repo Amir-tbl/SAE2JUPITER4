@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
+// Contrôleur de base : fournit les modales et utilitaires communs aux autres contrôleurs
 abstract class BaseController extends Controller
 {
     public static function getSuccessModal(string $message)

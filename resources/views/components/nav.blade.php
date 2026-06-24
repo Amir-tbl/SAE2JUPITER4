@@ -1,3 +1,4 @@
+{{-- Barre de navigation commune à toutes les pages --}}
 <nav class="navbar navbar-expand-lg" style="background-color: #e3f2fd;">
     <div class="container-fluid">
 
