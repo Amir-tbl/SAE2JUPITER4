@@ -434,6 +434,15 @@ class Order extends Model
         return $query->where('status', \Database\Seeders\Status::BON_DE_COMMANDE_NON_SIGNE->value);
     }
 
+    // Scope : commandes deja traitees par le directeur (signees ou refusees)
+    public function scopeSigneesOuRefusees($query)
+    {
+        return $query->whereIn('status', [
+            \Database\Seeders\Status::BON_DE_COMMANDE_SIGNE->value,
+            \Database\Seeders\Status::BON_DE_COMMANDE_REFUSE->value,
+        ]);
+    }
+
     // Scope : commandes urgentes (en attente de signature depuis plus de X jours)
     public function scopeUrgent($query, int $jours = 7)
     {

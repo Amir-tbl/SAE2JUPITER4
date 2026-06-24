@@ -119,3 +119,49 @@ test('isUrgent accepte un seuil personnalise', function () {
     expect($order->isUrgent(3))->toBeTrue();
     expect($order->isUrgent(10))->toBeFalse();
 });
+
+test('scopeSigneesOuRefusees retourne uniquement les BC signes et refuses', function () {
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_SIGNE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_REFUSE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_NON_SIGNE->value]);
+    makeOrderDir(['status' => Status::DEVIS->value]);
+
+    $count = Order::signeesOuRefusees()->count();
+
+    expect($count)->toBe(2);
+});
+
+test('scopeSigneesOuRefusees exclut les commandes encore en attente ou en cours', function () {
+    makeOrderDir(['status' => Status::BROUILLON->value]);
+    makeOrderDir(['status' => Status::DEVIS->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_NON_SIGNE->value]);
+
+    expect(Order::signeesOuRefusees()->count())->toBe(0);
+});
+
+test('scopeSigneesOuRefusees compte correspond au kpiTotalTraites du dashboard', function () {
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_SIGNE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_SIGNE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_REFUSE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_NON_SIGNE->value]);
+
+    // Le dashboard directeur calcule kpiTotalTraites = signes + refuses
+    $kpiTotalTraites = Order::signeesOuRefusees()->count();
+
+    expect($kpiTotalTraites)->toBe(3);
+});
+
+test('la liste de signatures retourne 403 pour un utilisateur sans permission signer', function () {
+    $role = Role::forceCreate([
+        'name' => 'Agent test',
+        'description' => 'Agent sans permission directeur',
+        'is_department' => true,
+    ]);
+
+    $agent = User::factory()->create();
+    $agent->roles()->attach($role->id);
+
+    $response = $this->actingAs($agent)->get('/orders/signature');
+
+    $response->assertStatus(403);
+});

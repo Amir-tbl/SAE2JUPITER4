@@ -179,10 +179,7 @@ class DashboardController extends BaseController
                 ->sum('total_ttc'), 2, ',', ' '
         ) . ' €';
         $kpiUrgents = Order::urgent(7)->count();
-        $kpiTotalTraites = Order::whereIn('status', [
-            Status::BON_DE_COMMANDE_SIGNE->value,
-            Status::BON_DE_COMMANDE_REFUSE->value,
-        ])->count();
+        $kpiTotalTraites = Order::signeesOuRefusees()->count();
 
         // 5 BC en attente (les plus anciens d'abord)
         $bcEnAttente = Order::with(['supplier', 'department', 'author'])

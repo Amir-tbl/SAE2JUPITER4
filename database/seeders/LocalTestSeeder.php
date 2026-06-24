@@ -21,14 +21,14 @@ class LocalTestSeeder extends Seeder
     // Remplit la base avec des données de test
     public function run(): void
     {
+        // S assurer que les roles, permissions et comptes de base existent
+        $this->call(DatabaseSeeder::class);
+
         $nbSuppliers = 10;
         $nbUsers = 20;
         $nbOrders = 100;
 
-        // Donner un mot de passe à tous les utilisateurs existants (pour login local)
-        User::whereNull('password')->orWhere('password', '')->update(['password' => bcrypt('password')]);
-
-        // Récupérer les rôles par défaut (crées dans DatabaseSeeder)
+        // Récupérer les rôles par défaut (crées par DatabaseSeeder ci-dessus)
         $roles = Role::all();
 
         // Génération de fournisseurs aléatoires

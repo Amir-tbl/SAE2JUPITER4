@@ -1351,8 +1351,13 @@ class OrderController extends BaseController
     // Directeur - Signature
     public function signatureList(Request $request): View
     {
+        $user = Auth::user();
+        if (! $user->hasPermission(PermissionValue::SIGNER_BONS_DE_COMMANDES)) {
+            abort(403, "Acces reserve au directeur.");
+        }
+
         $query = Order::with(['supplier', 'department', 'author'])
-            ->where('status', Status::BON_DE_COMMANDE_NON_SIGNE->value);
+            ->enAttenteSignature();
 
         // Filtres GET
         if ($request->filled('department')) {
@@ -1381,11 +1386,10 @@ class OrderController extends BaseController
         });
 
         // 3 KPIs
-        $kpiTotal = Order::where('status', Status::BON_DE_COMMANDE_NON_SIGNE->value)->count();
-        $kpiUrgents = Order::where('status', Status::BON_DE_COMMANDE_NON_SIGNE->value)
-            ->where('created_at', '<', now()->subDays(7))->count();
+        $kpiTotal = Order::enAttenteSignature()->count();
+        $kpiUrgents = Order::urgent(7)->count();
         $kpiMontantTotal = number_format(
-            Order::where('status', Status::BON_DE_COMMANDE_NON_SIGNE->value)->sum('total_ttc'),
+            Order::enAttenteSignature()->sum('total_ttc'),
             2, ',', ' '
         ) . ' €';
 
