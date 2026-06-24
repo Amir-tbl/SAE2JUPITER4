@@ -13,7 +13,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Roles
+        $roles = $this->seedRoles();
+        $this->seedPermissions();
+        $this->seedRolePivot($roles);
+        $this->seedDefaultUsers();
+        $this->seedDefaultSuppliers();
+    }
+
+    /**
+     * Insere ou met a jour les roles de l application.
+     */
+    private function seedRoles(): \Illuminate\Support\Collection
+    {
         $roles = collect([
             [
                 'name' => 'Administrateur BD',
@@ -159,7 +170,14 @@ class DatabaseSeeder extends Seeder
             'name' => $r['name'], 'description' => $r['description'], 'is_department' => $r['is_department'],
         ])->toArray(), uniqueBy: ['id'], update: ['name', 'description', 'is_department']);
 
-        // Permissions
+        return $roles;
+    }
+
+    /**
+     * Insere ou met a jour les permissions de l application.
+     */
+    private function seedPermissions(): void
+    {
         $permissions = PermissionValue::cases();
         sort($permissions);
         $permissionElements = [];
@@ -167,8 +185,13 @@ class DatabaseSeeder extends Seeder
             $permissionElements[] = ['id' => $permission->value, 'name' => $permission->name, 'created_at' => now()];
         }
         DB::table('permissions')->upsert($permissionElements, uniqueBy: ['id']);
+    }
 
-        // Permission-role pivot
+    /**
+     * Peuple la table pivot permission_role.
+     */
+    private function seedRolePivot(\Illuminate\Support\Collection $roles): void
+    {
         $pivot = [];
         $i = 1;
         foreach ($roles as $role) {
@@ -180,8 +203,13 @@ class DatabaseSeeder extends Seeder
         if (!empty($pivot)) {
             DB::table('permission_role')->upsert($pivot, uniqueBy: ['permission_id', 'role_id']);
         }
+    }
 
-        // 5 comptes de test
+    /**
+     * Cree ou met a jour les comptes utilisateurs de test.
+     */
+    private function seedDefaultUsers(): void
+    {
         $password = Hash::make('password');
 
         $amir = User::updateOrCreate(['login' => 'tabellout'], [
@@ -226,7 +254,13 @@ class DatabaseSeeder extends Seeder
             ]);
         }
         $admin->roles()->sync([1]); // Administrateur BD
+    }
 
+    /**
+     * Cree ou met a jour les fournisseurs de base.
+     */
+    private function seedDefaultSuppliers(): void
+    {
         // 3 fournisseurs de base (match par siret pour eviter les doublons)
         Supplier::updateOrCreate(['siret' => '48795700012345'], [
             'company_name' => 'Amazon',
