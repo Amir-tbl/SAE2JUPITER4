@@ -138,3 +138,15 @@ test('scopeSigneesOuRefusees exclut les commandes encore en attente ou en cours'
 
     expect(Order::signeesOuRefusees()->count())->toBe(0);
 });
+
+test('scopeSigneesOuRefusees compte correspond au kpiTotalTraites du dashboard', function () {
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_SIGNE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_SIGNE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_REFUSE->value]);
+    makeOrderDir(['status' => Status::BON_DE_COMMANDE_NON_SIGNE->value]);
+
+    // Le dashboard directeur calcule kpiTotalTraites = signes + refuses
+    $kpiTotalTraites = Order::signeesOuRefusees()->count();
+
+    expect($kpiTotalTraites)->toBe(3);
+});
