@@ -150,3 +150,18 @@ test('scopeSigneesOuRefusees compte correspond au kpiTotalTraites du dashboard',
 
     expect($kpiTotalTraites)->toBe(3);
 });
+
+test('la liste de signatures retourne 403 pour un utilisateur sans permission signer', function () {
+    $role = Role::forceCreate([
+        'name' => 'Agent test',
+        'description' => 'Agent sans permission directeur',
+        'is_department' => true,
+    ]);
+
+    $agent = User::factory()->create();
+    $agent->roles()->attach($role->id);
+
+    $response = $this->actingAs($agent)->get('/orders/signature');
+
+    $response->assertStatus(403);
+});
